@@ -4,32 +4,26 @@ var ping = require('ping');
 var Twitter = require('twitter');
 //보안 키 읽어오기
 var token_file = require('./private/token.js');
-var consumer_key_file = require('./private/twitter/consumer_key.js');
-var consumer_secret_file = require('./private/twitter/consumer_secret.js');
-var access_token_key_file = require('./private/twitter/access_token_key.js');
-var access_token_secret_file = require('./private/twitter/access_token_secret.js');
-//파일 읽어오기
+//REAME 파일 읽어오기
 var help_manual = fs.readFileSync('./README.md', 'utf8');
 //홍무위키 상태 체크 설정값
 const hosts = ['hongmu.wiki'];
 const cfg = { timeout: 10 };
-
-//메우봇 트위터 설정값
+//트위터 보안 키 연결
 const twitter = new Twitter ({
-  consumer_key: consumer_key_file.token,
-  consumer_secret: consumer_secret_file.token,
-  access_token_key: access_token_key_file.token,
-  access_token_secret: access_token_secret_file.token
+  consumer_key: token_file.consumer_key,
+  consumer_secret: token_file.consumer_secret,
+  access_token_key: token_file.access_token_key,
+  access_token_secret: token_file.access_token_secret
 });
-
 //디스코드 봇 연결
 const client = new Discord.Client();
-client.login(token_file.token);
-
+client.login(token_file.bot);
 //봇 기동 시 동작
 client.on('ready', () => {
-  console.log("메우봇 준비 완료다 메우!");
-  client.user.setGame('열정페이 교육중');
+  console.log("메우봇 준비 완료다. 메우!");
+  //기본 프로필 상태메시지
+  client.user.setGame('열정페이');
 });
 
 //새로운 맴버 가입 시 동작
@@ -39,12 +33,12 @@ client.on("guildMemberAdd", member => {
 
 //기존 맴버 탈퇴 시 동작
 client.on("guildMemberRemove", member => {
-  member.guild.defaultChannel.send(member + " 이 채널에서 탈주했다 메우!");
+  member.guild.defaultChannel.send(member + " 이 채널에서 탈주했다. 메우!");
 });
 
 //맴버가 세션으로 돌아왔을 때
 client.on("guilddMemberAvailable", member => {
-  member.guild.defaultChannel.send(member + " 돌아온 것을 환영한다 메우!");
+  member.guild.defaultChannel.send(member + " 돌아온 것을 환영한다. 메우!");
 });
 
 //홍무위키 상태 체크
@@ -53,10 +47,10 @@ hosts.forEach(host => {
     client.on('message', message => {
       if (message.content === 'm!홍게생사') {
         if (isAlive == true) {
-          message.channel.send("지금 홍무위키 (" + host + ") 는 열심히 가동중이다 메우!");
+          message.channel.send("지금 홍무위키 (" + host + ") 는 열심히 가동중이다. 메우!");
         }
         else {
-          message.channel.send('지금 홍무위키 (' + host + ') 가 죽었다 메우! 잠시 인내심을 가져봐라 메우!');
+          message.channel.send('지금 홍무위키 (' + host + ') 가 죽었다 메우! 잠시 인내의 시간을 가져라. 메우!');
         }
       }
     })
@@ -78,13 +72,39 @@ client.on('message', message => {
     if (message.content.indexOf('m!검색하기_트위터')  == 0) {
       twitter.get('search/tweets', { q: message.content.replace('m!검색하기_트위터', "") }, function(error, tweets, response) {
         if (error) {
-          message.channel.send("음... 무언가 문제가 발생했다 메우... | @kycfeel")
+          message.channel.send("음... 무언가 문제가 발생했다. 메우... | @kycfeel")
         };
         message.channel.send(tweets);
         console.log(response);
       });
     }
 })
+
+/*
+//트위터 멘션 불러오기
+twitter.get('statuses/mentions_timeline'), { count: 1 }, function(error, mention, response) {
+    if (error) {
+      console.log(error);
+      message.reply("음... 무언가 문제가 발생했다 메우... | @kycfeel" + error)
+      return
+    }
+    if (lastMention != mention[0].text) {
+      console.log(mention[0])
+      console.log('process')
+      lastMention = mention[0].text
+
+      const message =
+        '<@' + 117258994522914824 + '>' +
+        ", 새 트위터 멘션이 도착했다 메우!\n\n" +
+        "```" +
+        mention[0].user.screen_name + "님 으로부터:\n\n" +
+        mention[0].text
+        + "```"
+
+        message.channel.send(message)
+      }
+  }
+*/
 
 //일반 명령어 정의
 client.on('message', message => {
@@ -117,11 +137,9 @@ client.on('message', message => {
     message.channel.send("한번만 더 그딴 소리하면 폭동을 일으킨다 메우!!!");
     }
   }
-});
-
-//다른 봇 앞에서 자존심 세우는 메우
-client.on('message', message => {
-  if (message.author.id == 335437132527042562 & message.author.id == 335227541549875201 & message.content.indexOf("m!")  == 0) {
-    message.channel.send("나는 봇의 명령따위 받지 않는다 메우. 메우는 봇보다 위대한 메우다 메우!");
- }
+  //프로필 상태메시지 변경
+  if (message.author.id == 117258994522914824 & message.content.indexOf("m!setGame")  == 0 ) {
+    client.user.setGame(message.content.replace("m!setGame", ""));
+    message.channel.send("프로필 상태 메시지가 정상적으로 변경되었다. 메우!");
+  }
 });
