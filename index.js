@@ -83,13 +83,13 @@ client.on('message', message => {
 
 //트위터 멘션 불러오기
 var lastMention;
-setInterval(twitterCheck, 5*1000);
+setInterval(twitterCheck, 10*1000);
 
 function twitterCheck() {
   twitter.get('statuses/mentions_timeline', { count: 1 }, function(error, mention, response) {
       if (error) {
         console.log(error);
-        message.reply("음... 무언가 문제가 발생했다 메우... | @kycfeel" + error)
+        message.channel.send("음... 무언가 문제가 발생했다 메우... | <@" + "243755957333524480" + ">" + error)
         return
       }
       if (lastMention != mention[0].text) {
