@@ -83,7 +83,7 @@ client.on('message', message => {
 
 //트위터 멘션 불러오기
 var lastMention;
-setInterval(twitterCheck, 10*1000);
+setInterval(twitterCheck, 20*1000);
 
 function twitterCheck() {
   twitter.get('statuses/mentions_timeline', { count: 1 }, function(error, mention, response) {
