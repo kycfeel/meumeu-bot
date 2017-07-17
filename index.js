@@ -23,7 +23,27 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170717_1723";
+const meuVersion = "170717_2112";
+
+//호스트 감지
+const hostVerify = function() {
+  if (os.hostname().length < 13 ) {
+    return "Docker Container"
+  }
+  else {
+    return "Developer's Personal Device - `meumeu-bot` is Now Under Development"
+  }
+}
+
+//호스트 감지 on Boot
+const hostVerifyonBoot = function () {
+  if (os.hostname().length < 13) {
+    return "지금부터 열정페이 할 수 있다. 메우!"
+  }
+  else {
+    return "메우봇은 지금 개발 모드다!\n일부 기능이 정상적으로 동작하지 않을 수 있으니 양해 바란다. 메우!\n\n"
+  }
+}
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -32,7 +52,7 @@ client.login(token_file.bot);
 //봇 기동 시 동작
 client.on('ready', () => {
   console.log("메우봇 준비 완료다 메우! 현재 버전은 " + meuVersion + " 이다. 메우!");
-  client.channels.find('id', '256335975842578433').send("지금부터 열정페이 할 수 있다. 메우! \n\현재 버전 *" + meuVersion + "*, *" + os.type() + "* 기반의 *" + os.hostname() + "* 에서 구동되고 있다. 메우!");
+  client.channels.find('id', '256335975842578433').send(hostVerifyonBoot() + "현재 버전 *" + meuVersion + "*, *" + os.type() + "* 기반의 *" + os.hostname() + "* 에서 구동되고 있다. 메우!");
   //기본 프로필 상태메시지
   client.user.setGame('열정페이');
 });
@@ -142,8 +162,8 @@ client.on('message', message => {
       message.delete(message.content);
       message.channel.send(message.content.replace("m!say", ""));
     }
-    else if (message.content === 'm!version') {
-      message.channel.send("지금의 메우봇은 " + meuVersion + " 에 만들어졌다 메우!");
+    else if (message.content === 'm!info') {
+      message.channel.send("`meumeu-bot`\n\nVersion : " + meuVersion + "\nSystem :*" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify() + ").") ;
     }
     else if (message.content.indexOf("메우야 우리 그타 좀 할까")  == 0) {
       message.channel.send('<@117258994522914824>, <@256334494716395520>, <@288660815676964874>, <@288685716651638785>' + randomBox(GTA5));
