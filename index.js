@@ -1,5 +1,6 @@
 var Discord = require("discord.js");
 var fs = require('fs');
+var os = require('os');
 var ping = require('ping');
 var Twitter = require('twitter');
 
@@ -22,7 +23,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170716_2354";
+const meuVersion = "170717_1723";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -31,7 +32,7 @@ client.login(token_file.bot);
 //봇 기동 시 동작
 client.on('ready', () => {
   console.log("메우봇 준비 완료다 메우! 현재 버전은 " + meuVersion + " 이다. 메우!");
-  client.channels.find('id', '256335975842578433').send("메우봇 정상 기동 완료. 지금부터 열정페이 할 수 있다. 메우!");
+  client.channels.find('id', '256335975842578433').send("지금부터 열정페이 할 수 있다. 메우! \n\현재 버전 *" + meuVersion + "*, *" + os.type() + "* 기반의 *" + os.hostname() + "* 에서 구동되고 있다. 메우!");
   //기본 프로필 상태메시지
   client.user.setGame('열정페이');
 });
