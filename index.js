@@ -13,7 +13,7 @@ let help_manual = fs.readFileSync('./README.md', 'utf8');
 
 //홍무위키 상태 체크 설정값
 const hosts = ['hongmu.wiki'];
-const cfg = { timeout: 10 };
+const cfg = { timeout: 3 };
 
 //트위터 보안 키 연결
 const twitter = new Twitter ({
@@ -24,7 +24,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170718_1638";
+const meuVersion = "170718_1831";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -123,13 +123,13 @@ function twitterCheck() {
 
 //일반 명령어 정의
 client.on('message', message => {
-  if (message.author.id == 335227541549875201 & message.content.indexOf("m!")  == 0) {
+  if (message.author.id == 335227541549875201 & message.content.indexOf("m!") & message.content.indexOf("메우")  == 0) {
     message.channel.send("나는 봇의 명령따위 받지 않는다 메우. 메우는 봇보다 위대한 메우다 메우!");
   }
-  else if (message.author.id == 335437132527042562 & message.content.indexOf("m!")  == 0) {
+  else if (message.author.id == 335437132527042562 & message.content.indexOf("m!") & message.content.indexOf("메우")  == 0) {
     message.channel.send('<@' + '243755957333524480' + '>' + "님 봇의 가정교육이 절실합니다.");
   }
-  else if (message.author.id == 336570757658181642 & message.content.indexOf("m!")  == 0) {
+  else if (message.author.id == 336570757658181642 & message.content.indexOf("m!") & message.content.indexOf("메우")  == 0) {
     message.channel.send("시구레 봇은 그 하나의... 읍읍이야...");
   }
   else {
@@ -147,7 +147,7 @@ client.on('message', message => {
       message.channel.send(message.content.replace("m!say", ""));
     }
     else if (message.content === 'm!info') {
-      message.channel.send("*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify() + ").") ;
+      message.channel.send("*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify.info() + ").") ;
     }
     else if (message.content.indexOf("메우야 우리 그타 좀 할까")  == 0) {
       message.channel.send('<@117258994522914824>, <@256334494716395520>, <@288660815676964874>, <@288685716651638785>' + randomBox(GTA5));
@@ -184,7 +184,8 @@ const meuPing = [
   "메우메우는 어묵을 좋아한다. 메우!",
   "메우메우는 전기와 하드웨어의 품질 인상을 요청한다! 메우!",
   "수도경찰청에소 왔소, 우리 주임님이셔.",
-  "이건 비밀인데... 사실 메우의 개발자는 으으읍....읍읍..."
+  "이건 비밀인데... 사실 메우의 개발자는 으으읍....읍읍...",
+  "소녀전선 재밌어요! 민나 소녀전선! 메우!"
 ]
 
 //메우 군기잡기
@@ -193,7 +194,8 @@ const meuonMilitary = [
   "메우... 메우도 좀 쉬어야 한다 메우...",
   "한번만 더 그딴 소리하면 폭동을 일으킨다 메우!!!",
   "메우... 제발 삼청교육대만은... 가기... 싫다... 메우...",
-  "메우는... 너무 힘들다....메우...."
+  "메우는... 너무 힘들다....메우....",
+  "메우는...소녀전선이 하고싶다...메우...."
 ];
 
 //랜덤박스
