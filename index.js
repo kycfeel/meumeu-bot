@@ -24,7 +24,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170718_1957";
+const meuVersion = "170719_0118";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -165,14 +165,8 @@ client.on('message', message => {
       client.user.setGame(message.content.replace("m!setGame", ""));
       message.channel.send("프로필 상태 메시지가 정상적으로 변경되었다. 메우!");
     }
-    else if (message.content.indexOf("메우야 밥 뭐 먹을까")  == 0) {
-      message.channel.send("사용자 접속 위치의 기후 확인 중...")
-      setTimeout(function(){message.channel.send("완료.")}, 2000);
-      setTimeout(function(){message.channel.send("사용자의 이전 메시지 발송 기록을 참조해 오늘의 기분 계산 중...")}, 3000);
-      setTimeout(function(){message.channel.send("완료.")}, 4000);
-      setTimeout(function(){message.channel.send("수집된 데이터를 종합해 최적의 식사 메뉴를 선택하는 중...")}, 5000);
-      setTimeout(function(){message.channel.send("완료.")}, 6000);
-      setTimeout(function(){message.channel.send(randomBox(mealMenu))}, 7000);
+    else if (message.content === ("m!메뉴추천")) {
+      message.channel.send(randomBox(mealMenu));
     }
 }});
 
@@ -208,10 +202,21 @@ const meuonMilitary = [
 ];
 
 const mealMenu = [
-  "*넌! 냉★수☆한★잔☆ 이 딱!!!!! 어울려!!!! 메우!!!*",
-  "*온수 한잔이 가장 적당합니다. 메우.*",
-  "*냉수 한사발!!! 쳐머거라 메우!!!*",
-  "현재 사용자에게 가장 적당한 식사 메뉴는.... *수돗물 한잔이다 이 쉐리야! 메우!*"
+  "🍗 🍻 치킨에 맥주는 어떨까? 메우?",
+  "메우는 🍝 맛있는 파스타가 먹고 싶다. 메우!",
+  "스시! 🍣 스시스시 시스시스는 입에서 살살 녹는다. 메우!",
+  "🍜 라-멘 먹자 라-멘. 없으면 한국 라면이라도 끓여 먹어라. 메우.",
+  "🍳 🥓 계란 후라이에 베이컨만 있으면 한끼 뚝딱이다. 메우!",
+  "🍎 가끔은 사과 한 알도 좋은 식사가 된다. 메우.",
+  "🍱 편의점 도시락 까 먹자. 메우!",
+  "☕️ 🥐 커피에 바삭한 크로와상을 앙!",
+  "메우는 🍛 맛난 카레 좋아한다. 메우!",
+  "🍕 배고플 땐 피자가 가장 가성비가 뛰어나다. 메우!",
+  "🍔 🍟 버거킹 롯데리아 맥도날드 맘스터치.... 쩝쩝...",
+  "🌮 🌯 타코나 부리또도 정말정말 맛있는데.. 메우..",
+  "🍙 오니기리! 없으면 편의점 삼각김밥!",
+  "🌭 핫도그는 싫어하나? 메우?",
+  "🍖 고기! 고기! 고기를 뜯자! 메우!"
 ]
 
 const nichijo = [
