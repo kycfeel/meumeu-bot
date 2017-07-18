@@ -24,7 +24,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170718_1831";
+const meuVersion = "170718_1957";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -33,7 +33,7 @@ client.login(token_file.bot);
 //봇 기동 시 동작
 client.on('ready', () => {
   console.log("메우봇 준비 완료다 메우! 현재 버전은 " + meuVersion + " 이다. 메우!");
-  client.channels.find('id', '256335975842578433').send( hostVerify.onBoot() + " 현재 버전 *" + meuVersion + "*, *" + os.type() + "* 기반의 *" + os.hostname() + "* 에서 구동되고 있다. 메우!");
+  client.channels.find('id', '256335975842578433').send( hostVerify.onBoot() + "현재 버전 *" + meuVersion + "*, *" + os.type() + "* 기반의 *" + os.hostname() + "* 에서 구동되고 있다. 메우!");
   //기본 프로필 상태메시지
   client.user.setGame('열정페이');
 });
@@ -123,14 +123,14 @@ function twitterCheck() {
 
 //일반 명령어 정의
 client.on('message', message => {
-  if (message.author.id == 335227541549875201 & message.content.indexOf("m!") & message.content.indexOf("메우")  == 0) {
+  if (message.author.id == 335227541549875201 & (message.content.indexOf("m!") != -1 | message.content.indexOf("메우야") != -1)) {
     message.channel.send("나는 봇의 명령따위 받지 않는다 메우. 메우는 봇보다 위대한 메우다 메우!");
   }
-  else if (message.author.id == 335437132527042562 & message.content.indexOf("m!") & message.content.indexOf("메우")  == 0) {
+  else if (message.author.id == 335437132527042562 & (message.content.indexOf("m!") != -1 | message.content.indexOf("메우야") != -1)) {
     message.channel.send('<@' + '243755957333524480' + '>' + "님 봇의 가정교육이 절실합니다.");
   }
-  else if (message.author.id == 336570757658181642 & message.content.indexOf("m!") & message.content.indexOf("메우")  == 0) {
-    message.channel.send("시구레 봇은 그 하나의... 읍읍이야...");
+  else if (message.author.id == 336570757658181642 & (message.content.indexOf("m!") != -1 | message.content.indexOf("메우야") != -1)) {
+    message.channel.send(randomBox(nichijo));
   }
   else {
     if (message.content === 'm!help') {
@@ -165,6 +165,15 @@ client.on('message', message => {
       client.user.setGame(message.content.replace("m!setGame", ""));
       message.channel.send("프로필 상태 메시지가 정상적으로 변경되었다. 메우!");
     }
+    else if (message.content.indexOf("메우야 밥 뭐 먹을까")  == 0) {
+      message.channel.send("사용자 접속 위치의 기후 확인 중...")
+      setTimeout(function(){message.channel.send("완료.")}, 2000);
+      setTimeout(function(){message.channel.send("사용자의 이전 메시지 발송 기록을 참조해 오늘의 기분 계산 중...")}, 3000);
+      setTimeout(function(){message.channel.send("완료.")}, 4000);
+      setTimeout(function(){message.channel.send("수집된 데이터를 종합해 최적의 식사 메뉴를 선택하는 중...")}, 5000);
+      setTimeout(function(){message.channel.send("완료.")}, 6000);
+      setTimeout(function(){message.channel.send(randomBox(mealMenu))}, 7000);
+    }
 }});
 
 /*아래에서부터 랜덤 토킹*/
@@ -198,6 +207,20 @@ const meuonMilitary = [
   "메우는...소녀전선이 하고싶다...메우...."
 ];
 
+const mealMenu = [
+  "*넌! 냉★수☆한★잔☆ 이 딱!!!!! 어울려!!!! 메우!!!*",
+  "*온수 한잔이 가장 적당합니다. 메우.*",
+  "*냉수 한사발!!! 쳐머거라 메우!!!*",
+  "현재 사용자에게 가장 적당한 식사 메뉴는.... *수돗물 한잔이다 이 쉐리야! 메우!*"
+]
+
+const nichijo = [
+  "제독, 불렀어?",
+  "나는 아직, 여기에 있어도 괜찮은 걸까……?",
+  "내게 흥미가 있어? ……괜찮아. 뭐든 물어봐.",
+  "아쉽게 됐네.",
+  "제독, 편지가 와 있어."
+]
 //랜덤박스
 function randomBox(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
