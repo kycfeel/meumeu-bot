@@ -1,14 +1,15 @@
-var Discord = require("discord.js");
-var fs = require('fs');
-var os = require('os');
-var ping = require('ping');
-var Twitter = require('twitter');
+let Discord = require("discord.js");
+let fs = require('fs');
+let os = require('os');
+let ping = require('ping');
+let Twitter = require('twitter');
+let hostVerify = require('./src/hostVerify');
 
 //보안 키 읽어오기
-var token_file = require('./private/token.js');
+let token_file = require('./private/token.js');
 
 //REAME 파일 읽어오기
-var help_manual = fs.readFileSync('./README.md', 'utf8');
+let help_manual = fs.readFileSync('./README.md', 'utf8');
 
 //홍무위키 상태 체크 설정값
 const hosts = ['hongmu.wiki'];
@@ -23,27 +24,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170717_2112";
-
-//호스트 감지
-const hostVerify = function() {
-  if (os.hostname().length < 13 ) {
-    return "Docker Container"
-  }
-  else {
-    return "Developer's Personal Device - `meumeu-bot` is Now Under Development"
-  }
-}
-
-//호스트 감지 on Boot
-const hostVerifyonBoot = function () {
-  if (os.hostname().length < 13) {
-    return "지금부터 열정페이 할 수 있다. 메우!"
-  }
-  else {
-    return "메우봇은 지금 개발 모드다!\n일부 기능이 정상적으로 동작하지 않을 수 있으니 양해 바란다. 메우!\n\n"
-  }
-}
+const meuVersion = "170718_1638";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -52,7 +33,7 @@ client.login(token_file.bot);
 //봇 기동 시 동작
 client.on('ready', () => {
   console.log("메우봇 준비 완료다 메우! 현재 버전은 " + meuVersion + " 이다. 메우!");
-  client.channels.find('id', '256335975842578433').send(hostVerifyonBoot() + "현재 버전 *" + meuVersion + "*, *" + os.type() + "* 기반의 *" + os.hostname() + "* 에서 구동되고 있다. 메우!");
+  client.channels.find('id', '256335975842578433').send( hostVerify.onBoot() + " 현재 버전 *" + meuVersion + "*, *" + os.type() + "* 기반의 *" + os.hostname() + "* 에서 구동되고 있다. 메우!");
   //기본 프로필 상태메시지
   client.user.setGame('열정페이');
 });
@@ -88,7 +69,7 @@ hosts.forEach(host => {
   })
 }, cfg)
 
-//메우봇 트위터 트윗하기
+//트위터 트윗하기
 client.on('message', message => {
     if (message.content.indexOf('m!트윗하기')   == 0) {
         twitter.post('statuses/update', { status: message.content.replace('m!트윗하기', "") }, function(error, tweets, response) {
@@ -113,7 +94,7 @@ client.on('message', message => {
 
 
 //트위터 멘션 불러오기
-var lastMention;
+let lastMention;
 setInterval(twitterCheck, 20*1000);
 
 function twitterCheck() {
@@ -146,7 +127,10 @@ client.on('message', message => {
     message.channel.send("나는 봇의 명령따위 받지 않는다 메우. 메우는 봇보다 위대한 메우다 메우!");
   }
   else if (message.author.id == 335437132527042562 & message.content.indexOf("m!")  == 0) {
-    message.channel.send('<@' + '243755957333524480' + '>' + " 님 봇의 가정교육이 절실합니다.");
+    message.channel.send('<@' + '243755957333524480' + '>' + "님 봇의 가정교육이 절실합니다.");
+  }
+  else if (message.author.id == 336570757658181642 & message.content.indexOf("m!")  == 0) {
+    message.channel.send("시구레 봇은 그 하나의... 읍읍이야...");
   }
   else {
     if (message.content === 'm!help') {
@@ -163,20 +147,35 @@ client.on('message', message => {
       message.channel.send(message.content.replace("m!say", ""));
     }
     else if (message.content === 'm!info') {
-      message.channel.send("`meumeu-bot`\n\nVersion : " + meuVersion + "\nSystem :*" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify() + ").") ;
+      message.channel.send("*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify() + ").") ;
     }
     else if (message.content.indexOf("메우야 우리 그타 좀 할까")  == 0) {
       message.channel.send('<@117258994522914824>, <@256334494716395520>, <@288660815676964874>, <@288685716651638785>' + randomBox(GTA5));
     }
+    else if (message.content == "메우야 군기가 빠진 것 같다") {
+      message.channel.send(randomBox(meuonMilitary));
+    }
+    else if (message.content.indexOf("m!삼청교육대")  == 0 ) {
+      client.user.setGame("삼청교육대");
+      message.channel.send("메웃! 당신들 누구야 읍읍... 메우는 삼청교육대로 끌려갔다 메우...");
+      var painfulMeu = setInterval(function() { message.channel.send("하나..둘...하나..둘..메우...") }, 1500 );
+      setTimeout(function() { clearInterval(painfulMeu); message.channel.send("메...메우메우 앞으로는 열심히 일하겠습니다 메우!"); client.user.setGame("열정페이"); }, 8000);
+    }
+    else if (message.author.id == 117258994522914824 & message.content.indexOf("m!setGame")  == 0 ) {
+      client.user.setGame(message.content.replace("m!setGame", ""));
+      message.channel.send("프로필 상태 메시지가 정상적으로 변경되었다. 메우!");
+    }
 }});
 
-//GTA5 정주행 팟 부르기
+/*아래에서부터 랜덤 토킹*/
+
 const GTA5 = [
   " GTA5 할 시간이다 메우! 퍼뜩 들어와라!",
   " 그타 할 시간입니다. 엠$인% 여러분. 메우!",
   " 인간은 GTA를 해야 먹고 살 수 있다. 당장 들어와라 메우!",
   " 메우... 누군가 그타가 하고 싶은 것 같다..."
 ]
+
 //메우 작동 상태 테스트
 const meuPing = [
   "메우봇 정상 기동 중. 메우!",
@@ -201,20 +200,3 @@ const meuonMilitary = [
 function randomBox(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
-
-client.on('message', message => {
-  if (message.content == "메우야 군기가 빠진 것 같다") {
-    message.channel.send(randomBox(meuonMilitary));
-  }
-  //프로필 상태메시지 변경
-  if (message.author.id == 117258994522914824 & message.content.indexOf("m!setGame")  == 0 ) {
-    client.user.setGame(message.content.replace("m!setGame", ""));
-    message.channel.send("프로필 상태 메시지가 정상적으로 변경되었다. 메우!");
-  }
-  else if (message.content.indexOf("m!삼청교육대")  == 0 ) {
-    client.user.setGame("삼청교육대");
-    message.channel.send("메웃! 당신들 누구야 읍읍... 메우는 삼청교육대로 끌려갔다 메우...");
-    var painfulMeu = setInterval(function() { message.channel.send("하나..둘...하나..둘..메우...")}, 1500 );
-    setTimeout(function() { clearInterval(painfulMeu); message.channel.send("메...메우메우 앞으로는 열심히 일하겠습니다 메우!"); client.user.setGame("열정페이"); }, 8000);
-  }
-});
