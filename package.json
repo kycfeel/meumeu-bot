@@ -12,7 +12,10 @@
   "license": "MIT",
   "dependencies": {
     "discord.js": "^11.1.0",
-    "ping": "^0.2.2"
+    "ping": "^0.2.2",
+    "url-parse": "^1.1.9",
+    "weather": "^0.1.0",
+    "weather-js": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1"
