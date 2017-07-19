@@ -25,7 +25,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170719_0707";
+const meuVersion = "170719_1730";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -195,11 +195,11 @@ client.on('message', message => {
     //날씨정보 요청
     else if (message.content.indexOf("m!날씨")  == 0) {
       weather.find({search: message.content.replace("m!날씨", ""), degreeType: 'C'}, function(err, result){
-        if (err) console.log(err);
-        let weatherStringify = JSON.stringify(result)
-        let weatherData = JSON.parse(weatherStringify.substring(weatherStringify.indexOf('{'),weatherStringify.lastIndexOf('}') + 1))
-        console.log(weatherData);
-        message.channel.send("지금 " + weatherData.location.name + " 의 온도는 " + weatherData.current.temperature + " 도다. 메우!");
+          if (err) console.log(err);
+          let weatherStringify = JSON.stringify(result, null ,2)
+          let weatherData = JSON.parse(weatherStringify);
+          console.log(weatherData);
+          message.channel.send("지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!");
       })
     }
 }});
