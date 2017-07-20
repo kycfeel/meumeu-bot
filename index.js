@@ -75,6 +75,7 @@ client.on('message', message => {
     if (message.content.indexOf('m!트윗하기')   == 0) {
         twitter.post('statuses/update', { status: message.content.replace('m!트윗하기', "") }, function(error, tweets, response) {
             if (!error) {
+              message.react('✅');
               message.channel.send("정상적으로 트윗이 업로드되었다 메우!");
             }
             console.log(tweets);
@@ -109,7 +110,7 @@ function twitterCheck() {
         if (lastMention == undefined) { lastMention = mention[0].text; return }
         lastMention = mention[0].text
 
-        const mentionreturn = '<@117258994522914824>' +
+        const mentionreturn =
         "새 트위터 멘션이 도착했다 메우!\n\n" +
         "```" +
         mention[0].user.screen_name + "님 으로부터:\n\n" +
@@ -134,7 +135,10 @@ client.on('message', message => {
   }
   //시구레 봇 차단
   else if (message.author.id == 336570757658181642 & (message.content.indexOf("m!") != -1 | message.content.indexOf("메우야") != -1)) {
-    message.channel.send(randomBox(nichijo));
+    message.react('🖕🏻');
+    message.react('👳🏻');
+    message.react('🙅🏻');
+    //message.channel.send(randomBox(nichijo));
   }
   else {
     //메뉴얼 출력
@@ -147,7 +151,8 @@ client.on('message', message => {
     }
     //메우 작동 테스트
     else if (message.content === 'm!ping') {
-      message.channel.send(randomBox(meuPing));
+      message.react('✅');
+      //message.channel.send(randomBox(meuPing));
     }
     //메우로 말하기
     else if (message.content.indexOf('m!say')  == 0) {
@@ -171,7 +176,7 @@ client.on('message', message => {
       client.user.setGame("삼청교육대");
       message.channel.send("메웃! 당신들 누구야 읍읍... 메우는 삼청교육대로 끌려갔다 메우...");
       var painfulMeu = setInterval(function() { message.channel.send("하나..둘...하나..둘..메우...") }, 1500 );
-      setTimeout(function() { clearInterval(painfulMeu); message.channel.send("메...메우메우 앞으로는 열심히 일하겠습니다 메우!"); client.user.setGame("열정페이"); }, 8000);
+      setTimeout(function() { clearInterval(painfulMeu); message.channel.send("메...메우메우 앞으로는 열심히 일하겠습니다 메우!"); client.user.setGame("열정페이"); message.react('🙇'); }, 8000);
     }
     //setGame 변경
     else if (message.author.id == 117258994522914824 & message.content.indexOf("m!setGame")  == 0 ) {
@@ -274,8 +279,8 @@ function randomBox(arr) {
 };
 
 //에러 발생해도 서버 안 죽이기 + 오류 전송하기
-client.on('message', message => {
-  process.on('uncaughtException', function (err) {
-      message.channel.send('메웃! 오류를 감지했다! : ' + err);
-  });
-})
+
+process.on('uncaughtException', function (err) {
+    const channel = client.channels.find('name', 'general');
+		channel.sendMessage('오류를 감지했다. 메웃! : ' + err);
+});
