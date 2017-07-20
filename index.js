@@ -25,7 +25,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170719_1730";
+const meuVersion = "170720_1304";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -85,7 +85,7 @@ client.on('message', message => {
     if (message.content.indexOf('m!검색하기_트위터')  == 0) {
       twitter.get('search/tweets', { q: message.content.replace('m!검색하기_트위터', "") }, function(error, tweets, response) {
         if (error) {
-          message.channel.send("음... 무언가 문제가 발생했다 메우... | <@117258994522914824>")
+          message.channel.send("음... 무언가 문제가 발생했다 메우...")
         };
         message.channel.send(tweets);
         console.log(response);
@@ -194,14 +194,14 @@ client.on('message', message => {
     }
     //날씨정보 요청
     else if (message.content.indexOf("m!날씨")  == 0) {
-      weather.find({search: message.content.replace("m!날씨", ""), degreeType: 'C'}, function(err, result){
-          if (err) console.log(err);
-          let weatherStringify = JSON.stringify(result, null ,2)
-          let weatherData = JSON.parse(weatherStringify);
-          console.log(weatherData);
-          message.channel.send("지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!");
-      })
-    }
+     weather.find({search: message.content.replace("m!날씨", ""), degreeType: 'C'}, function(err, result){
+         if (err) console.log(err);
+         let weatherStringify = JSON.stringify(result, null ,2)
+         let weatherData = JSON.parse(weatherStringify);
+         console.log(weatherData);
+         message.channel.send("지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!");
+     })
+   }
 }});
 
 /*아래에서부터 랜덤 토킹*/
@@ -272,3 +272,10 @@ const nichijo = [
 function randomBox(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
+
+//에러 발생해도 서버 안 죽이기 + 오류 전송하기
+client.on('message', message => {
+  process.on('uncaughtException', function (err) {
+      message.channel.send('메웃! 오류를 감지했다! : ' + err);
+  });
+})
