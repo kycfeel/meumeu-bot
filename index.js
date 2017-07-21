@@ -25,7 +25,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170720_1304";
+const meuVersion = "170722_0116";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -60,10 +60,10 @@ hosts.forEach(host => {
     client.on('message', message => {
       if (message.content === 'm!홍게생사') {
         if (isAlive == true) {
-          message.channel.send("지금 홍무위키 (" + host + ") 는 열심히 가동중이다 메우!");
+          message.reply("지금 홍무위키 (" + host + ") 는 열심히 가동중이다 메우!");
         }
         else {
-          message.channel.send('지금 홍무위키 (' + host + ') 가 죽었다 메우! 잠시 인내의 시간을 가져라 메우!');
+          message.reply('지금 홍무위키 (' + host + ') 가 죽었다 메우! 잠시 인내의 시간을 가져라 메우!');
         }
       }
     })
@@ -76,7 +76,7 @@ client.on('message', message => {
         twitter.post('statuses/update', { status: message.content.replace('m!트윗하기', "") }, function(error, tweets, response) {
             if (!error) {
               message.react('✅');
-              message.channel.send("정상적으로 트윗이 업로드되었다 메우!");
+              message.reply("정상적으로 트윗이 업로드되었다 메우!");
             }
             console.log(tweets);
             console.log(response);
@@ -136,14 +136,12 @@ client.on('message', message => {
   //시구레 봇 차단
   else if (message.author.id == 336570757658181642 & (message.content.indexOf("m!") != -1 | message.content.indexOf("메우야") != -1)) {
     message.react('🖕🏻');
-    message.react('👳🏻');
-    message.react('🙅🏻');
     //message.channel.send(randomBox(nichijo));
   }
   else {
     //메뉴얼 출력
     if (message.content === 'm!help') {
-      message.channel.send(help_manual);
+      message.reply(help_manual);
     }
     //내 아바타 이미지화 후 전송
     else if (message.content === 'm!내아바타') {
@@ -161,7 +159,7 @@ client.on('message', message => {
     }
     //메우 버전, 시스템 정보
     else if (message.content === 'm!info') {
-      message.channel.send("*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify.info() + ").") ;
+      message.reply("\n\n*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify.info() + ").") ;
     }
     //그타팟 소환
     else if (message.content.indexOf("메우야 우리 그타 좀 할까")  == 0) {
@@ -181,11 +179,11 @@ client.on('message', message => {
     //setGame 변경
     else if (message.author.id == 117258994522914824 & message.content.indexOf("m!setGame")  == 0 ) {
       client.user.setGame(message.content.replace("m!setGame", ""));
-      message.channel.send("프로필 상태 메시지가 정상적으로 변경되었다. 메우!");
+      message.reply("프로필 상태 메시지가 정상적으로 변경되었다. 메우!");
     }
     //진짜 메뉴 추천
     else if (message.content === ("m!메뉴추천")) {
-      message.channel.send(randomBox(mealMenu));
+      message.reply(randomBox(mealMenu));
     }
     //머신러-닝 메뉴 추천
     else if (message.content.indexOf("메우야 밥 뭐 먹을까")  == 0) {
@@ -199,15 +197,20 @@ client.on('message', message => {
     }
     //날씨정보 요청
     else if (message.content.indexOf("m!날씨")  == 0) {
-     weather.find({search: message.content.replace("m!날씨", ""), degreeType: 'C'}, function(err, result){
-         if (err) console.log(err);
-         let weatherStringify = JSON.stringify(result, null ,2)
-         let weatherData = JSON.parse(weatherStringify);
-         console.log(weatherData);
-         message.channel.send("지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!");
-     })
-   }
-}});
+       weather.find({search: message.content.replace("m!날씨", ""), degreeType: 'C'}, function(err, result){
+           if (err) console.log(err);
+           let weatherStringify = JSON.stringify(result, null ,2)
+           let weatherData = JSON.parse(weatherStringify);
+           console.log(weatherData);
+           message.reply("지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!");
+       })
+     }
+     //홍 단어 필터링
+    else if (message.content.indexOf("홍")  == 0) {
+      message.react('<:hong:256335975842578433>');
+    }
+  }});
+
 
 /*아래에서부터 랜덤 토킹*/
 
@@ -279,7 +282,6 @@ function randomBox(arr) {
 };
 
 //에러 발생해도 서버 안 죽이기 + 오류 전송하기
-
 process.on('uncaughtException', function (err) {
     const channel = client.channels.find('name', 'general');
 		channel.sendMessage('오류를 감지했다. 메웃! : ' + err);
