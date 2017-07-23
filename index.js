@@ -25,7 +25,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170722_0116";
+const meuVersion = "170723_1908";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -196,8 +196,11 @@ client.on('message', message => {
       setTimeout(function(){message.channel.send(randomBox(machinelear_ningOutput))}, 7000);
     }
     //날씨정보 요청
-    else if (message.content.indexOf("m!날씨")  == 0) {
-       weather.find({search: message.content.replace("m!날씨", ""), degreeType: 'C'}, function(err, result){
+    else if (message.content === "m!날씨") {
+      message.channel.send("메우... 날씨 검색은 `m!날씨 <검색할 지역>` 형식으로 해 달라. 메우!");
+    }
+    else if (message.content.indexOf("m!날씨 ")  == 0) {
+       weather.find({search: message.content.replace("m!날씨 ", ""), degreeType: 'C'}, function(err, result){
            if (err) console.log(err);
            let weatherStringify = JSON.stringify(result, null ,2)
            let weatherData = JSON.parse(weatherStringify);
@@ -205,10 +208,6 @@ client.on('message', message => {
            message.reply("지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!");
        })
      }
-     //홍 단어 필터링
-    else if (message.content.indexOf("홍")  == 0) {
-      message.react('<:hong:256335975842578433>');
-    }
   }});
 
 
