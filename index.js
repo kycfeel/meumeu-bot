@@ -136,7 +136,7 @@ client.on('message', message => {
   //시구레 봇 차단
   else if (message.author.id == 336570757658181642 & (message.content.indexOf("m!") != -1 | message.content.indexOf("메우야") != -1)) {
     message.react('🖕🏻');
-    //message.channel.send(randomBox(nichijo));
+    //message.channel.send(randomBox(kancolleShigure));
   }
   else {
     //메뉴얼 출력
@@ -267,7 +267,7 @@ const machinelear_ningOutput = [
   "현재 사용자에게 가장 적당한 식사 메뉴는.... *수돗물 한잔이다 이 쉐리야! 메우!*"
 ]
 
-const nichijo = [
+const kancolleShigure = [
   "제독, 불렀어?",
   "나는 아직, 여기에 있어도 괜찮은 걸까……?",
   "내게 흥미가 있어? ……괜찮아. 뭐든 물어봐.",
