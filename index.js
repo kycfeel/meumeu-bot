@@ -25,7 +25,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170723_1908";
+const meuVersion = "170801_1235";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -136,7 +136,7 @@ client.on('message', message => {
   //시구레 봇 차단
   else if (message.author.id == 336570757658181642 & (message.content.indexOf("m!") != -1 | message.content.indexOf("메우야") != -1)) {
     message.react('🖕🏻');
-    //message.channel.send(randomBox(kancolleShigure));
+    //message.channel.send(randomBox(nichijo));
   }
   else {
     //메뉴얼 출력
@@ -159,7 +159,11 @@ client.on('message', message => {
     }
     //메우 버전, 시스템 정보
     else if (message.content === 'm!info') {
-      message.reply("\n\n*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify.info() + ").") ;
+      //CPU 정보 Stringify
+      let cpuStringify = JSON.stringify(os.cpus(), null ,2)
+      let cpuData = JSON.parse(cpuStringify);
+
+      message.reply("\n\n*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify.info() + "). \n\n*CPU : " + cpuData[0].model + "* \nMemory(kb) : " + os.totalmem() + "* \nUptime(ms) : " + os.uptime() + "* ") ;
     }
     //그타팟 소환
     else if (message.content.indexOf("메우야 우리 그타 좀 할까")  == 0) {
@@ -186,6 +190,7 @@ client.on('message', message => {
       message.reply(randomBox(mealMenu));
     }
     //머신러-닝 메뉴 추천
+    //코드 시간날때 완전히 수정 필요. 쓸모없는 기능 + 멍청한 로직. 지울까?
     else if (message.content.indexOf("메우야 밥 뭐 먹을까")  == 0) {
       message.channel.send("사용자 접속 위치의 기후 확인 중...")
       setTimeout(function(){message.channel.send("완료.")}, 2000);
