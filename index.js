@@ -29,7 +29,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170801_1235";
+const meuVersion = "170804_1437";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -244,9 +244,9 @@ client.on('message', message => {
          var $ = cheerio.load(body);
 
          $("body > div").each(function() {
-           var postTitle = $(this).find("tbody tr td").text();
+           var postTitle = $(this).find("tr").text();
            console.log(postTitle);
-           message.react('✅')
+           message.reply(postTitle);
          });
        });
      };
