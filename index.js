@@ -6,6 +6,10 @@ let Twitter = require('twitter');
 let hostVerify = require('./src/hostVerify');
 let weather = require('weather-js');
 
+let request = require('request');
+let url = "http://m.kma.go.kr/m/risk/risk_03.jsp";
+let cheerio = require('cheerio');
+
 //보안 키 읽어오기
 let token_file = require('./private/token.js');
 
@@ -38,6 +42,7 @@ client.on('ready', () => {
   //기본 프로필 상태메시지
   client.user.setGame('열정페이');
 });
+
 
 //새로운 맴버 가입 시 동작
 client.on("guildMemberAdd", member => {
@@ -157,6 +162,13 @@ client.on('message', message => {
       message.delete(message.content);
       message.channel.send(message.content.replace("m!say", ""));
     }
+    //채팅 반복하기
+    else if (message.content.indexOf('m!repeat')  == 0) {
+      for (i=0; i<message.content.substring(9,10); i++) {
+        message.channel.send(message.content.substring(11, message.content.length));
+      }
+      message.react('✅');
+    }
     //메우 버전, 시스템 정보
     else if (message.content === 'm!info') {
       //CPU 정보 Stringify
@@ -209,10 +221,35 @@ client.on('message', message => {
            if (err) console.log(err);
            let weatherStringify = JSON.stringify(result, null ,2)
            let weatherData = JSON.parse(weatherStringify);
-           console.log(weatherData);
+           console.log(weatherData[0]);
            message.reply("지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!");
        })
      }
+     else if (message.content === "m!애니편성표") {
+
+       let urlAnime = "http://www.anissia.net/anitime/list?w=5";
+
+       request(urlAnime, function(error, response, body){
+         if (error) throw error;
+         let animeStringify = JSON.stringify(body, null, 2);
+         let animeData = JSON.parse(animeStringify);
+         console.log(animeData);
+         message.reply(animeData.s);
+       })
+     }
+     else if (message.content === "m!지진") {
+       request(url, function(error, response, body) {
+         if (error) throw error;
+
+         var $ = cheerio.load(body);
+
+         $("body > div").each(function() {
+           var postTitle = $(this).find("tbody tr td").text();
+           console.log(postTitle);
+           message.react('✅')
+         });
+       });
+     };
   }});
 
 
