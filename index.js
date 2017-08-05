@@ -29,7 +29,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170805_2322";
+const meuVersion = "170806_0247";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -241,7 +241,7 @@ client.on('message', message => {
            let weatherData = JSON.parse(weatherStringify);
            console.log(weatherData[0]);
            message.channel.send({embed: {
-             color: 15105570,
+             color: 3066993,
              title: "날씨 정보",
              description: "지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!"
            }})
