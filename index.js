@@ -29,7 +29,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170805_1817";
+const meuVersion = "170805_2322";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -243,10 +243,12 @@ client.on('message', message => {
 
          var $ = cheerio.load(body);
 
-         $("body > div").each(function() {
-           var postTitle = $(this).find("tr").text();
-           console.log(postTitle);
-           message.reply(postTitle);
+         var postTitle = $("#div_0 > div > table > tbody > tr");
+          postTitle.each(function() {
+           var title = $(this).find("td:nth-child(1)").text().trim();
+           var desc = $(this).find("td:nth-child(2)").text().trim();
+           console.log(title, desc);
+           message.channel.send("```\n\n" + title + "\n" + desc + "\n\n```");
          });
        });
      };
