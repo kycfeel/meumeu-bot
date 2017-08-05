@@ -116,13 +116,18 @@ function twitterCheck() {
         lastMention = mention[0].text
 
         const mentionreturn =
-        "새 트위터 멘션이 도착했다 메우!\n\n" +
         "```" +
         mention[0].user.screen_name + "님 으로부터:\n\n" +
         mention[0].text
         + "```\n\n"
 
-        client.channels.find('id', '256335975842578433').send(mentionreturn)
+        message.channel.send({embed: {
+          color: 3447003,
+          title: "새 트위터 멘션이 도착했다 메우!",
+          description: mentionreturn
+        }})
+
+        //client.channels.find('id', '256335975842578433').send(mentionreturn)
         }
     }
   )
@@ -146,7 +151,12 @@ client.on('message', message => {
   else {
     //메뉴얼 출력
     if (message.content === 'm!help') {
-      message.reply(help_manual);
+      message.channel.send({embed: {
+        color: 12370112,
+        title: "도움말",
+        description: help_manual
+      }})
+      //message.reply(help_manual);
     }
     //내 아바타 이미지화 후 전송
     else if (message.content === 'm!내아바타') {
@@ -174,8 +184,12 @@ client.on('message', message => {
       //CPU 정보 Stringify
       let cpuStringify = JSON.stringify(os.cpus(), null ,2)
       let cpuData = JSON.parse(cpuStringify);
-
-      message.reply("```\n\n\n*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify.info() + "). \n\n*CPU : " + cpuData[0].model + "* \nMemory : " + bytesToSize(os.totalmem()) + "* \nUptime : " + msToTime(os.uptime()) + "* \n\n```") ;
+      message.channel.send({embed: {
+        color: 12370112,
+        title: "시스템 정보",
+        description: "\n\n\n*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : " + os.type() + " Based " + os.hostname() + " (" + hostVerify.info() + "). \n\nCPU : " + cpuData[0].model + " \nMemory : " + bytesToSize(os.totalmem()) + " \nUptime : " + msToTime(os.uptime()) + " \n\n"
+      }})
+      //message.reply("```\n\n\n*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify.info() + "). \n\n*CPU : " + cpuData[0].model + "* \nMemory : " + bytesToSize(os.totalmem()) + "* \nUptime : " + msToTime(os.uptime()) + "* \n\n```") ;
     }
     //그타팟 소환
     else if (message.content.indexOf("메우야 우리 그타 좀 할까")  == 0) {
@@ -199,11 +213,15 @@ client.on('message', message => {
     }
     //진짜 메뉴 추천
     else if (message.content === ("m!메뉴추천")) {
+      /*message.channel.send({embed: {
+        color: 3447003,
+        description: randomBox(mealMenu)
+      }})*/
       message.reply(randomBox(mealMenu));
     }
     //머신러-닝 메뉴 추천
     //코드 시간날때 완전히 수정 필요. 쓸모없는 기능 + 멍청한 로직. 지울까?
-    else if (message.content.indexOf("메우야 밥 뭐 먹을까")  == 0) {
+    /*else if (message.content.indexOf("메우야 밥 뭐 먹을까")  == 0) {
       message.channel.send("사용자 접속 위치의 기후 확인 중...")
       setTimeout(function(){message.channel.send("완료.")}, 2000);
       setTimeout(function(){message.channel.send("사용자의 이전 메시지 발송 기록을 참조해 오늘의 기분 계산 중...")}, 3000);
@@ -211,7 +229,7 @@ client.on('message', message => {
       setTimeout(function(){message.channel.send("수집된 데이터를 종합해 최적의 식사 메뉴를 선택하는 중...")}, 5000);
       setTimeout(function(){message.channel.send("완료.")}, 6000);
       setTimeout(function(){message.channel.send(randomBox(machinelear_ningOutput))}, 7000);
-    }
+    }*/
     //날씨정보 요청
     else if (message.content === "m!날씨") {
       message.channel.send("메우... 날씨 검색은 `m!날씨 <검색할 지역>` 형식으로 해 달라. 메우!");
@@ -222,24 +240,62 @@ client.on('message', message => {
            let weatherStringify = JSON.stringify(result, null ,2)
            let weatherData = JSON.parse(weatherStringify);
            console.log(weatherData[0]);
-           message.reply("지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!");
+           message.channel.send({embed: {
+             color: 15105570,
+             title: "날씨 정보",
+             description: "지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!"
+           }})
+           //message.reply("지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!");
        })
      }
-     else if (message.content === "m!애니편성표") {
+     /*else if (message.content === "m!애니편성표") {
 
        let urlAnime = "http://www.anissia.net/anitime/list?w=5";
 
        request(urlAnime, function(error, response, body){
          if (error) throw error;
-         let animeStringify = JSON.stringify(body, null, 2);
-         let animeData = JSON.parse(animeStringify);
-         console.log(animeData);
-         message.reply(animeData.s);
+         let animePull = JSON.parse(body);
+          for (i=0; i<animePull.length; i++) {
+            console.log(animePull[i].s);
+            message.reply({embed: {
+              color : 3447003,
+              title: ""
+            }});
+          }
        })
-     }
+     }*/
      else if (message.content === "m!지진") {
+
        request(url, function(error, response, body) {
          if (error) throw error;
+
+         var $ = cheerio.load(body);
+
+         var postTitle = $("#div_0 > div > table > tbody > tr");
+         var description = ""
+
+         postTitle.each(function() {
+           var title = $(this).find("td:nth-child(1)").text().trim();
+           var desc = $(this).find("td:nth-child(2)").text().trim();
+
+           function eqData() {}
+           eqData.prototype.titleD = title;
+           eqData.prototype.descD = desc;
+
+           var eqOutput = new eqData()
+
+           console.log(eqOutput.titleD, eqOutput.descD); 
+
+           description += "\n\n" + eqOutput.titleD + "\n" + eqOutput.descD
+         });
+         message.channel.send({embed: {
+           color: 15158332,
+           title: "최근 국내 지진 정보",
+           description: description
+         }})
+       });
+     };
+         /*if (error) throw error;
 
          var $ = cheerio.load(body);
 
@@ -247,11 +303,27 @@ client.on('message', message => {
           postTitle.each(function() {
            var title = $(this).find("td:nth-child(1)").text().trim();
            var desc = $(this).find("td:nth-child(2)").text().trim();
-           console.log(title, desc);
-           message.channel.send("```\n\n" + title + "\n" + desc + "\n\n```");
+           /*function eqData() {
+             this.titleD = title,
+             this.descD = desc
+           }*/
+           /*var eqData = {
+             titleD : title,
+             descD : desc
+           }*/
+           /*function eqData() {}
+           eqData.prototype.titleD = title;
+           eqData.prototype.descD = desc;
+           var eqOutput = new eqData()
+           console.log(eqOutput.titleD, eqOutput.descD);
+           message.channel.send({embed: {
+             color: 15158332,
+             title: "최근 국내 지진 정보",
+             description: "\n\n" + eqOutput.titleD + "\n" + eqOutput.descD
+           }})
          });
-       });
-     };
+       });*/
+
   }});
 
 
