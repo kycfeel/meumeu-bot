@@ -29,7 +29,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170804_1437";
+const meuVersion = "170805_1817";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -175,7 +175,7 @@ client.on('message', message => {
       let cpuStringify = JSON.stringify(os.cpus(), null ,2)
       let cpuData = JSON.parse(cpuStringify);
 
-      message.reply("\n\n*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify.info() + "). \n\n*CPU : " + cpuData[0].model + "* \nMemory(kb) : " + os.totalmem() + "* \nUptime(ms) : " + os.uptime() + "* ") ;
+      message.reply("```\n\n\n*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify.info() + "). \n\n*CPU : " + cpuData[0].model + "* \nMemory : " + bytesToSize(os.totalmem()) + "* \nUptime : " + msToTime(os.uptime()) + "* \n\n```") ;
     }
     //그타팟 소환
     else if (message.content.indexOf("메우야 우리 그타 좀 할까")  == 0) {
@@ -327,3 +327,25 @@ process.on('uncaughtException', function (err) {
     const channel = client.channels.find('name', 'general');
 		channel.sendMessage('오류를 감지했다. 메웃! : ' + err);
 });
+
+//BytestoGB
+function bytesToSize(bytes) {
+   var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+   if (bytes == 0) return '0 Byte';
+   var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+   return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+};
+
+//mstoHour
+function msToTime(duration) {
+        var milliseconds = parseInt((duration%1000)/100)
+            , seconds = parseInt((duration/1000)%60)
+            , minutes = parseInt((duration/(1000*60))%60)
+            , hours = parseInt((duration/(1000*60*60))%24);
+
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+        return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+    }
