@@ -5,6 +5,7 @@ let ping = require('ping');
 let Twitter = require('twitter');
 let hostVerify = require('./src/hostVerify');
 let weather = require('weather-js');
+let exec = require('child_process').exec;
 
 let request = require('request');
 let url = "http://m.kma.go.kr/m/risk/risk_03.jsp";
@@ -248,6 +249,19 @@ client.on('message', message => {
            //message.reply("지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!");
        })
      }
+     //exec 명령어 처리
+     else if(message.author.id == 117258994522914824 && message.content.indexOf('m!exec') == 0) {
+      exec(message.content.replace('m!exec', ''), (error, stdout, stderr) => {
+        if(error) {
+          console.log('ERROR : ' + error);
+          message.channel.send('ERROR : '+ error);
+        }
+        console.log('STDOUT : ' + stdout);
+        console.log('STDERR : ' + stderr);
+        message.channel.send('STDOUT : ' + stdout);
+      });
+    }
+
      /*else if (message.content === "m!애니편성표") {
 
        let urlAnime = "http://www.anissia.net/anitime/list?w=5";
@@ -323,7 +337,6 @@ client.on('message', message => {
            }})
          });
        });*/
-
   }});
 
 
