@@ -30,7 +30,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170806_0247";
+const meuVersion = "170806_2332";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -188,7 +188,26 @@ client.on('message', message => {
       message.channel.send({embed: {
         color: 12370112,
         title: "시스템 정보",
-        description: "\n\n\n*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : " + os.type() + " Based " + os.hostname() + " (" + hostVerify.info() + "). \n\nCPU : " + cpuData[0].model + " \nMemory : " + bytesToSize(os.totalmem()) + " \nUptime : " + msToTime(os.uptime()) + " \n\n"
+        fields: [{
+          name: "\nVersion",
+          value: meuVersion
+        },
+        {
+          name: "System",
+          value: os.type()
+        },
+        {
+          name: "Hostname",
+          value: os.hostname()
+        },
+        {
+          name: "Hardware",
+          value: cpuData[0].model + " with " + bytesToSize(os.totalmem()) + " of Mem."
+        }],
+        footer: {
+          icon_url: client.user.avatarURL,
+          text: "meumeu-bot | Developed by kycfeel."
+        }
       }})
       //message.reply("```\n\n\n*meumeu-bot*\n\nVersion : " + meuVersion + "\nSystem : *" + os.type() + "* Based *" + os.hostname() + "* (" + hostVerify.info() + "). \n\n*CPU : " + cpuData[0].model + "* \nMemory : " + bytesToSize(os.totalmem()) + "* \nUptime : " + msToTime(os.uptime()) + "* \n\n```") ;
     }
