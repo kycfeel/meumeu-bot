@@ -30,7 +30,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170806_2332";
+const meuVersion = "170807_1131";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -262,8 +262,30 @@ client.on('message', message => {
            console.log(weatherData[0]);
            message.channel.send({embed: {
              color: 3066993,
-             title: "날씨 정보",
-             description: "지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!"
+             title: weatherData[0].location.name + " 의 기상 정보",
+             fields: [
+             {
+               name: "\n\n온도",
+               value: weatherData[0].current.temperature + "℃"
+             },
+             {
+               name: "습도",
+               value: weatherData[0].current.humidity + "%"
+             },
+             {
+               name: "체감온도",
+               value: weatherData[0].current.feelslike + "℃"
+             },
+             {
+              name: "날씨",
+              value: weatherData[0].current.skytext
+             }],
+             footer: {
+               icon_url: client.user.avatarURL,
+               text: "Weather Data from Microsoft MSN."
+             }
+
+             //description: "지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!"
            }})
            //message.reply("지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!");
        })
@@ -324,7 +346,11 @@ client.on('message', message => {
          message.channel.send({embed: {
            color: 15158332,
            title: "최근 국내 지진 정보",
-           description: description
+           description: description,
+           footer: {
+             icon_url: client.user.avatarURL,
+             text: "Earthquake Data from Korea Meteorological Administration."
+           }
          }})
        });
      };
@@ -431,7 +457,12 @@ function randomBox(arr) {
 //에러 발생해도 서버 안 죽이기 + 오류 전송하기
 process.on('uncaughtException', function (err) {
     const channel = client.channels.find('name', 'general');
-		channel.sendMessage('오류를 감지했다. 메웃! : ' + err);
+    /*channel.sendMessage({embed: {
+      color: 15158332,
+      title: "오류 감지",
+      description: err
+    }})*/
+		channel.sendMessage('오류를 감지했다. 메웃! : **' + err + '**');
 });
 
 //BytestoGB
