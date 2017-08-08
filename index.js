@@ -8,7 +8,6 @@ let weather = require('weather-js');
 let exec = require('child_process').exec;
 
 let request = require('request');
-let url = "http://m.kma.go.kr/m/risk/risk_03.jsp";
 let cheerio = require('cheerio');
 
 //보안 키 읽어오기
@@ -30,7 +29,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170807_1131";
+const meuVersion = "170808_0959";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -103,7 +102,7 @@ client.on('message', message => {
 
 //트위터 멘션 불러오기
 let lastMention;
-setInterval(twitterCheck, 20*1000);
+setInterval(twitterCheck, 30*1000);
 
 function twitterCheck() {
   twitter.get('statuses/mentions_timeline', { count: 1 }, function(error, mention, response) {
@@ -299,9 +298,50 @@ client.on('message', message => {
         }
         console.log('STDOUT : ' + stdout);
         console.log('STDERR : ' + stderr);
-        message.channel.send('STDOUT : ' + stdout);
+        message.channel.send(stdout);
       });
     }
+
+    else if (message.content === "m!익산104") {
+      let busUrl104 = "http://m.iksan.go.kr/synap/skin/doc.html?fn=p1421454423320-.xls&rs=/upload_data/Synap/busRoute/&cpath=";
+      request(busUrl104, function(error, response, body) {
+        if (error) throw error;
+
+        var $ = cheerio.load(body);
+
+        var postTitle = $("");
+        var description = ""
+
+        console.log(postTitle)
+
+        postTitle.each(function() {
+          //var title = $(this).find("td:nth-child(1)").text().trim();
+          var desc = $(this).find("td:nth-child(4)").text().trim();
+
+          function bus104Iksan() {}
+          bus104Iksan.prototype.descD = desc;
+
+          var bus104IksanData = new bus104Iksan()
+
+          console.log(bus104IksanData.descD); 
+          message.react('✅');
+
+          //description += "\n\n" + eqOutput.titleD + "\n" + eqOutput.descD
+        });
+        /*
+        message.channel.send({embed: {
+          color: 15158332,
+          title: "최근 국내 지진 정보",
+          description: description,
+          footer: {
+            icon_url: client.user.avatarURL,
+            text: "Earthquake Data from Korea Meteorological Administration."
+          }
+        }})*/
+      });
+    }
+
+
 
      /*else if (message.content === "m!애니편성표") {
 
@@ -320,8 +360,8 @@ client.on('message', message => {
        })
      }*/
      else if (message.content === "m!지진") {
-
-       request(url, function(error, response, body) {
+       let kmaUrl = "http://m.kma.go.kr/m/risk/risk_03.jsp";
+       request(kmaUrl, function(error, response, body) {
          if (error) throw error;
 
          var $ = cheerio.load(body);
