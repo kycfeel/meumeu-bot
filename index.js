@@ -29,7 +29,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170808_0959";
+const meuVersion = "170811_2100";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -121,7 +121,7 @@ function twitterCheck() {
         mention[0].text
         + "```\n\n"
 
-        message.channel.send({embed: {
+        client.channels.find('id', '256335975842578433').send({embed: {
           color: 3447003,
           title: "새 트위터 멘션이 도착했다 메우!",
           description: mentionreturn
@@ -201,7 +201,7 @@ client.on('message', message => {
         },
         {
           name: "Hardware",
-          value: cpuData[0].model + " with " + bytesToSize(os.totalmem()) + " of Mem."
+          value: cpuData[0].model + " with " + bytesToSize(os.totalmem()) + " of Memory."
         }],
         footer: {
           icon_url: client.user.avatarURL,
@@ -281,7 +281,7 @@ client.on('message', message => {
              }],
              footer: {
                icon_url: client.user.avatarURL,
-               text: "Weather Data from Microsoft MSN."
+               text: "Weather Data from MSN."
              }
 
              //description: "지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!"
