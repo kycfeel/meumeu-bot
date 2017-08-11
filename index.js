@@ -29,7 +29,7 @@ const twitter = new Twitter ({
 });
 
 //메우봇 버전
-const meuVersion = "170811_2100";
+const meuVersion = "170811_2150";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -37,7 +37,7 @@ client.login(token_file.bot);
 
 //봇 기동 시 동작
 client.on('ready', () => {
-  console.log("메우봇 준비 완료다 메우! 현재 버전은 " + meuVersion + " 이다. 메우!");
+  console.log("메우봇 준비 완료다. 메우! 현재 버전은 " + meuVersion + " 이다. 메우!");
   client.channels.find('id', '256335975842578433').send( hostVerify.onBoot() + "현재 버전 *" + meuVersion + "*, *" + os.type() + "* 기반의 *" + os.hostname() + "* 에서 구동되고 있다. 메우!");
   //기본 프로필 상태메시지
   client.user.setGame('열정페이');
@@ -81,7 +81,6 @@ client.on('message', message => {
         twitter.post('statuses/update', { status: message.content.replace('m!트윗하기', "") }, function(error, tweets, response) {
             if (!error) {
               message.react('✅');
-              message.reply("정상적으로 트윗이 업로드되었다 메우!");
             }
             console.log(tweets);
             console.log(response);
@@ -91,7 +90,7 @@ client.on('message', message => {
     if (message.content.indexOf('m!검색하기_트위터')  == 0) {
       twitter.get('search/tweets', { q: message.content.replace('m!검색하기_트위터', "") }, function(error, tweets, response) {
         if (error) {
-          message.channel.send("음... 무언가 문제가 발생했다 메우...")
+          message.react(":x:")
         };
         message.channel.send(tweets);
         console.log(response);
@@ -108,23 +107,23 @@ function twitterCheck() {
   twitter.get('statuses/mentions_timeline', { count: 1 }, function(error, mention, response) {
       if (error) {
         console.log(error);
-        message.channel.send("음... 무언가 문제가 발생했다 메우... | <@117258994522914824>" + error)
-        return
+        message.channel.send(error);
+        return;
       }
       if (lastMention != mention[0].text) {
         if (lastMention == undefined) { lastMention = mention[0].text; return }
         lastMention = mention[0].text
 
-        const mentionreturn =
-        "```" +
-        mention[0].user.screen_name + "님 으로부터:\n\n" +
-        mention[0].text
-        + "```\n\n"
+        const mentionreturn = mention[0].text;
 
         client.channels.find('id', '256335975842578433').send({embed: {
           color: 3447003,
-          title: "새 트위터 멘션이 도착했다 메우!",
-          description: mentionreturn
+          title: "",
+          description: mentionreturn,
+          footer: {
+            icon_url: 'https://pbs.twimg.com/profile_images/875087697177567232/Qfy0kRIP_400x400.jpg',
+            text: mention[0].user.screen_name + " 으로부터."
+          }
         }})
 
         //client.channels.find('id', '256335975842578433').send(mentionreturn)
@@ -264,7 +263,7 @@ client.on('message', message => {
              title: weatherData[0].location.name + " 의 기상 정보",
              fields: [
              {
-               name: "\n\n온도",
+               name: "온도",
                value: weatherData[0].current.temperature + "℃"
              },
              {
@@ -280,8 +279,8 @@ client.on('message', message => {
               value: weatherData[0].current.skytext
              }],
              footer: {
-               icon_url: client.user.avatarURL,
-               text: "Weather Data from MSN."
+               icon_url: ('http://mobile.softpedia.com/screenshots/icon_Bing-Weather-Windows-Phone.jpg'),
+               text: "MSN Weather"
              }
 
              //description: "지금 *" + weatherData[0].location.name + "* 의 기온은 *" + weatherData[0].current.temperature + "℃* 다. 메우!\n\n체감 " + weatherData[0].current.feelslike + "℃, 습도 " + weatherData[0].current.humidity + "%, " + weatherData[0].current.skytext + " 의 날씨를 보인다. 메우!"
@@ -385,11 +384,11 @@ client.on('message', message => {
          });
          message.channel.send({embed: {
            color: 15158332,
-           title: "최근 국내 지진 정보",
+           title: "최신 국내 지진 정보",
            description: description,
            footer: {
-             icon_url: client.user.avatarURL,
-             text: "Earthquake Data from Korea Meteorological Administration."
+             icon_url: "https://pbs.twimg.com/profile_images/714792706539700224/mlPzu7LY_400x400.jpg",
+             text: "대한민국 기상청"
            }
          }})
        });
