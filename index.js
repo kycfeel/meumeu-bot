@@ -1,23 +1,24 @@
-let Discord = require("discord.js");
-let fs = require('fs');
-let os = require('os');
-let weather = require('weather-js');
-let request = require('request');
-let cheerio = require('cheerio');
-let exec = require('child_process').exec;
-let Twitter = require('twitter');
+const Discord = require("discord.js");
+const fs = require('fs');
+const os = require('os');
+const weather = require('weather-js');
+const request = require('request');
+const cheerio = require('cheerio');
+const exec = require('child_process').exec;
+const Twitter = require('twitter');
 
-let routes = require('./src/routes');
+const routes = require('./src/routes');
 
-let hostVerify = require('./src/hostVerify');
-let twitterActivity = require('./src/twitter');
-let ping = require('./src/ping');
-let earthquake = require('./src/earthquake');
-let talking = require('./src/script');
-let numconvert = require('./src/numconvert');
+const hostVerify = require('./src/hostVerify');
+const twitterActivity = require('./src/twitter');
+const ping = require('./src/ping');
+const earthquake = require('./src/earthquake');
+const talking = require('./src/script');
+const numconvert = require('./src/numconvert');
+const GirlsFrontline = require('./src/GirlsFrontline');
 
 //보안 키 파일 읽어오기
-let token_file = require('./private/token.js');
+const token_file = require('./private/token.js');
 
 //트위터 보안 키 적용
 const twitter = new Twitter ({
@@ -28,10 +29,10 @@ const twitter = new Twitter ({
 });
 
 //README 파일 읽어오기
-let help_manual = fs.readFileSync('./README.md', 'utf8');
+const help_manual = fs.readFileSync('./README.md', 'utf8');
 
 //메우봇 버전
-const meuVersion = "170829_1157";
+const meuVersion = "170912_1100";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -67,11 +68,14 @@ ping.hongmuWiki(client);
 //국내지진
 earthquake.ROK(client);
 
+//소녀전선 인형제조
+//GirlsFrontline.buildingTime(client);
+
 //트윗하기
 twitterActivity.Post(client, twitter);
 
 //트위터 멘션 불러오기
-setInterval(()=>{twitterActivity.Check(client, twitter)}, 30*1000);
+setInterval(()=>{ twitterActivity.Check(client, twitter); }, 61*1000);
 
 //일반 명령어
 client.on("message", message => {
@@ -82,12 +86,12 @@ client.on("message", message => {
         message.react('✅');
         break;
 
-      case message.content == "m!help" :
+      case message.content === "m!help" :
         message.channel.send({embed: {
         color: 12370112,
         title: "도움말",
         description: help_manual
-      }})
+      }});
         break;
 
       case message.content.indexOf('m!say')  == 0 :
@@ -103,14 +107,14 @@ client.on("message", message => {
         break;
 
       case message.content === 'm!info' :
-        let cpuStringify = JSON.stringify(os.cpus(), null ,2)
+        let cpuStringify = JSON.stringify(os.cpus(), null ,2);
         let cpuData = JSON.parse(cpuStringify);
         message.channel.send({embed: {
         color: 12370112,
         title: "시스템 정보",
         fields: [{
           name: "\nVersion",
-          value: meuVersion
+          value: meuVersion + " (" + hostVerify.info() + " mode)"
         },
         {
           name: "System",
@@ -128,18 +132,18 @@ client.on("message", message => {
           icon_url: client.user.avatarURL,
           text: "meumeu-bot | Developed by kycfeel."
         }
-      }})
+      }});
         break;
 
       case message.content.indexOf("m!삼청교육대")  == 0 :
         client.user.setPresence({ game: { name: '삼청교육대', type: 0 } });
         message.channel.send("메웃! 당신들 누구야 읍읍... 메우는 삼청교육대로 끌려갔다 메우...");
-        let painfulMeu = setInterval(() => { message.channel.send("하나..둘...하나..둘..메우...") }, 1500 );
+        let painfulMeu = setInterval(() => { message.channel.send("하나..둘...하나..둘..메우..."); }, 1500 );
         setTimeout(() => { clearInterval(painfulMeu); message.channel.send("메...메우메우 앞으로는 열심히 일하겠습니다 메우!"); client.user.setPresence({ game: { name: '열정페이', type: 0 } }); message.react('🙇'); }, 8000);
         break;
 
 
-      case message.content === ("m!메뉴추천") :
+      case message.content === "m!메뉴추천" :
         message.reply(randomBox(mealMenu));
         break;
 
@@ -150,11 +154,35 @@ client.on("message", message => {
       case message.content.indexOf("m!날씨 ")  == 0 :
         weather.find({search: message.content.replace("m!날씨 ", ""), degreeType: 'C'}, function(err, result){
         if (err) console.log(err);
-        let weatherStringify = JSON.stringify(result, null ,2)
+        let weatherStringify = JSON.stringify(result, null ,2);
         let weatherData = JSON.parse(weatherStringify);
         console.log(weatherData[0]);
+
+      function weatherColor(data) {
+        console.log(data);
+        switch (true) {
+          case (data.indexOf("Sunny")  == 0):
+          case (data.indexOf("Clear")  == 0):
+            return 33023;
+            break;
+
+          /*case (data.indexOf("Windy")  == 0):
+          case (data.indexOf("Cloudy")  == 0):
+          case (data.indexOf("Frigid")  == 0):
+          case (data.indexOf("Snow")  == 0):
+          case (data.indexOf("Blizzard")  == 0):
+          case (data.indexOf("Fog")  == 0):
+            return 12434877;
+            break;*/
+
+          default:
+            break;
+        }
+      };
+
+
         message.channel.send({embed: {
-          color: 3066993,
+          color: weatherColor(weatherData[0].current.skytext),
           title: weatherData[0].location.name + " 의 기상 정보",
           fields: [
           {
@@ -175,17 +203,17 @@ client.on("message", message => {
           }],
           footer: {
             icon_url: ('http://mobile.softpedia.com/screenshots/icon_Bing-Weather-Windows-Phone.jpg'),
-            text: "MSN Weather"
+            text: "MSN Weather, " + weatherData[0].current.observationtime + " 시(현지) 기준."
           }
-        }})
-      })
+        }});
+      });
         break;
 
       case message.content.indexOf("메우야 우리 그타 좀 할까")  == 0 :
         message.channel.send(randomBox(talking.CallingGTA5));
         break;
 
-      case message.content == "메우야 군기가 빠진 것 같다" :
+      case message.content === "메우야 군기가 빠진 것 같다" :
         message.channel.send(randomBox(meuonMilitary));
         break;
 
@@ -220,7 +248,7 @@ if (message.author.id == 117258994522914824 && message.content.indexOf('m!')  ==
       break;
     }
   }
-})
+});
 /*아래에서부터 랜덤 토킹*/
 
 //메우 군기잡기
@@ -249,14 +277,14 @@ const mealMenu = [
   "🍙 오니기리! 없으면 편의점 삼각김밥!",
   "🌭 핫도그는 싫어하나? 메우?",
   "🍖 고기! 고기! 고기를 뜯자! 메우!"
-]
+];
 
 const machinelear_ningOutput = [
   "*넌! 냉★수☆한★잔☆ 이 딱!!!!! 어울려!!!! 메우!!!*",
   "*온수 한잔이 가장 적당합니다. 메우.*",
   "*냉수 한사발!!! 쳐머거라 메우!!!*",
   "현재 사용자에게 가장 적당한 식사 메뉴는.... *수돗물 한잔이다 이 쉐리야! 메우!*"
-]
+];
 
 const kancolleShigure = [
   "제독, 불렀어?",
@@ -264,12 +292,12 @@ const kancolleShigure = [
   "내게 흥미가 있어? ……괜찮아. 뭐든 물어봐.",
   "아쉽게 됐네.",
   "제독, 편지가 와 있어."
-]
+];
 
 //랜덤 돌리는 함수
 function randomBox(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
-};
+}
 
 //에러 발생해도 서버 안 죽이기 + 오류 전송하기
 process.on('uncaughtException', function (err) {

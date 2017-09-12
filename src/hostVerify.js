@@ -4,10 +4,10 @@ var os = require('os');
 module.exports = {
   info: function() {
     if (os.hostname().length < 13 ) {
-    return "Docker Container"
+    return "Production"
     }
     else {
-      return "Developer's Personal Device - *meumeu-bot* is Now Under Development"
+      return "Development"
     }
   },
 

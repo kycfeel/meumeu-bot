@@ -20,4 +20,4 @@ msToTime: function(duration) {
 
         return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
     }
-}
+};
