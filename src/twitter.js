@@ -10,7 +10,7 @@ Post: function(client, twitter) {
           }
           console.log(tweets);
           console.log(response);
-      })
+      });
     }
   });
 },
@@ -25,8 +25,8 @@ Check: function(client, twitter) {
           return;
         }
         if (lastMention != mention[0].text) {
-          if (lastMention == undefined) { lastMention = mention[0].text; return }
-          lastMention = mention[0].text
+          if (lastMention == undefined) { lastMention = mention[0].text; return; }
+          lastMention = mention[0].text;
 
           const mentionreturn = mention[0].text;
 
@@ -38,12 +38,12 @@ Check: function(client, twitter) {
               icon_url: 'https://pbs.twimg.com/profile_images/875087697177567232/Qfy0kRIP_400x400.jpg',
               text: mention[0].user.screen_name + " 으로부터."
             }
-          }})
+          }});
 
           //client.channels.find('id', '256335975842578433').send(mentionreturn)
           }
         }
-      )
-  })
+    );
+  });
   }
-}
+};

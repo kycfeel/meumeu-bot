@@ -6,6 +6,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const exec = require('child_process').exec;
 const Twitter = require('twitter');
+const ytdl = require('ytdl-core');
 
 const routes = require('./src/routes');
 
@@ -32,7 +33,7 @@ const twitter = new Twitter ({
 const help_manual = fs.readFileSync('./README.md', 'utf8');
 
 //메우봇 버전
-const meuVersion = "170912_1100";
+const meuVersion = "171004_0157";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -75,7 +76,7 @@ earthquake.ROK(client);
 twitterActivity.Post(client, twitter);
 
 //트위터 멘션 불러오기
-setInterval(()=>{ twitterActivity.Check(client, twitter); }, 61*1000);
+//setInterval(()=>{ twitterActivity.Check(client, twitter); }, 90*1000);
 
 //일반 명령어
 client.on("message", message => {
@@ -246,9 +247,42 @@ if (message.author.id == 117258994522914824 && message.content.indexOf('m!')  ==
       client.user.setPresence({ game: { name: message.content.replace("m!setGame", ""), type: 0 } });
       message.reply("프로필 상태 메시지가 정상적으로 변경되었다. 메우!");
       break;
+
+    case message.content.indexOf("m!play")  == 0 :
+      musicStream(message);
+      break;
+
+    case message.content.indexOf("m!stop")  == 0 :
+      message.member.voiceChannel.leave();
+      break;
+
+    case message.content === ("m!pause") :
+      dispatcher.pause();
+      break;
+
+    case message.content === ("m!resume") :
+      dispatcher.resume();
+      break;
+
+    case message.content.indexOf("m!volume")  == 0 :
+      dispatcher.setVolume(message.content.replace("m!volume", ""));
+      break;
     }
   }
+
+  function musicStream() {
+    const streamOptions = { seek: 0, volume: 0.05 };
+    message.member.voiceChannel.join()
+    .then(connection => {
+       const stream = ytdl(message.content.replace("m!play", ""), { filter : 'audioonly' });
+       dispatcher = connection.playStream(stream, streamOptions);
+      })
+    .catch(console.error);
+
+  }
 });
+
+
 /*아래에서부터 랜덤 토킹*/
 
 //메우 군기잡기
@@ -302,5 +336,5 @@ function randomBox(arr) {
 //에러 발생해도 서버 안 죽이기 + 오류 전송하기
 process.on('uncaughtException', function (err) {
     const channel = client.channels.find('name', 'general');
-		channel.sendMessage('오류를 감지했다. 메웃! : **' + err + '**');
+		channel.send('오류를 감지했다. 메웃! : **' + err + '**');
 });
