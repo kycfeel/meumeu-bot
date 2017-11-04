@@ -8,8 +8,6 @@ const exec = require('child_process').exec;
 const Twitter = require('twitter');
 const ytdl = require('ytdl-core');
 
-const routes = require('./src/routes');
-
 const hostVerify = require('./src/hostVerify');
 const twitterActivity = require('./src/twitter');
 const ping = require('./src/ping');
@@ -33,7 +31,7 @@ const twitter = new Twitter ({
 const help_manual = fs.readFileSync('./README.md', 'utf8');
 
 //메우봇 버전
-const meuVersion = "171004_0157";
+const meuVersion = "171004_2157";
 
 //디스코드 봇 연결
 const client = new Discord.Client();
@@ -258,14 +256,17 @@ if (message.author.id == 117258994522914824 && message.content.indexOf('m!')  ==
 
     case message.content === ("m!pause") :
       dispatcher.pause();
+      message.reply("음악을 일시정지했다. 메우!");
       break;
 
     case message.content === ("m!resume") :
       dispatcher.resume();
+      message.reply("음악을 다시 재생한다. 메우!");
       break;
 
     case message.content.indexOf("m!volume")  == 0 :
-      dispatcher.setVolume(message.content.replace("m!volume", ""));
+      dispatcher.setVolume(message.content.replace("m!volume", "") * 0.01);
+      message.reply("현재 볼륨은 " + message.content.replace("m!volume", "") + "% 다. 메우!");
       break;
     }
   }
@@ -273,11 +274,11 @@ if (message.author.id == 117258994522914824 && message.content.indexOf('m!')  ==
   function musicStream() {
     const streamOptions = { seek: 0, volume: 0.05 };
     message.member.voiceChannel.join()
-    .then(connection => {
-       const stream = ytdl(message.content.replace("m!play", ""), { filter : 'audioonly' });
-       dispatcher = connection.playStream(stream, streamOptions);
-      })
-    .catch(console.error);
+      .then(connection => {
+         const stream = ytdl(message.content.replace("m!play", ""), { filter : 'audioonly' });
+         dispatcher = connection.playStream(stream, streamOptions);
+        })
+      .catch(console.error);
 
   }
 });
